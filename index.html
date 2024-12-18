@@ -154,4 +154,13 @@
             fetchState();
 
             for (let i = 1; i <= 3; i++) {
-                const switchToggle
+                const switchToggle = document.getElementById(`switch-toggle-${i}`);
+                switchToggle.addEventListener("change", function () {
+                    const newState = switchToggle.checked ? "on" : "off";
+                    updateState(i, newState);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
