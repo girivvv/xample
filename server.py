@@ -17,7 +17,7 @@ switch_state = {
 }
 
 # Specify the path to the HTML file
-HTML_FILE_PATH = "/var/www/html/iot/iot-control-2/index.html"
+HTML_FILE_PATH = "index.html"
 
 class GetStateHandler(RequestHandler):
     """Handler for returning the current state of switches."""
