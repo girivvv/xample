@@ -17,7 +17,7 @@ switch_state = {
 }
 
 # Specify the path to the HTML file
-HTML_FILE_PATH = "index.html"
+HTML_FILE_PATH = "index.html"  # Updated path
 
 class GetStateHandler(RequestHandler):
     """Handler for returning the current state of switches."""
