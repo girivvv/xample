@@ -6,53 +6,68 @@
     <title>IoT Switch Control</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            padding: 50px;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background-color: #20232a;
+            color: #61dafb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
             text-align: center;
+        }
+
+        .title {
+            font-size: 2em;
+            margin-bottom: 20px;
         }
 
         .switch-container {
             display: flex;
             justify-content: center;
-            gap: 50px;
-            flex-wrap: wrap;
-            margin-top: 30px;
+            gap: 20px;
         }
 
         .switch-box {
-            background: #ffffff;
-            border: 1px solid #ddd;
+            background-color: #282c34;
+            border: 2px solid #61dafb;
             border-radius: 10px;
             padding: 20px;
-            width: 150px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch-box label {
+            display: block;
+            margin-bottom: 10px;
+            color: #61dafb;
         }
 
         .slider {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 25px;
+            width: 60px;
+            height: 30px;
             background-color: #ccc;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
+            transition: background-color 0.3s;
         }
 
         .slider::after {
             content: "";
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
+            width: 25px;
+            height: 25px;
+            background-color: #61dafb;
             border-radius: 50%;
             top: 50%;
             left: 5px;
             transform: translateY(-50%);
-            transition: 0.3s all ease-in-out;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
         }
 
         input[type="checkbox"]:checked + .slider {
@@ -60,7 +75,7 @@
         }
 
         input[type="checkbox"]:checked + .slider::after {
-            transform: translateY(-50%) translateX(25px);
+            transform: translate(30px, -50%);
         }
 
         input[type="checkbox"] {
@@ -69,8 +84,7 @@
 
         .status {
             margin-top: 10px;
-            font-size: 14px;
-            color: #555;
+            color: #61dafb;
         }
 
         .error {
@@ -80,34 +94,28 @@
     </style>
 </head>
 <body>
-    <h1>IoT Switch Control</h1>
-    <p>Toggle the switches to update their state.</p>
-    <div id="error-message" class="error"></div>
-
-    <div class="switch-container">
-        <div class="switch-box">
-            <label>
-                <p>Switch 1</p>
+    <div class="container">
+        <h1 class="title">IoT Switch Control</h1>
+        <div id="error-message" class="error"></div>
+        <div class="switch-container">
+            <div class="switch-box">
+                <label for="switch-toggle-1">Switch 1</label>
                 <input type="checkbox" id="switch-toggle-1">
                 <span class="slider"></span>
-            </label>
-            <p class="status">State: <span id="state-display-1">Loading...</span></p>
-        </div>
-        <div class="switch-box">
-            <label>
-                <p>Switch 2</p>
+                <p class="status">State: <span id="state-display-1">Loading...</span></p>
+            </div>
+            <div class="switch-box">
+                <label for="switch-toggle-2">Switch 2</label>
                 <input type="checkbox" id="switch-toggle-2">
                 <span class="slider"></span>
-            </label>
-            <p class="status">State: <span id="state-display-2">Loading...</span></p>
-        </div>
-        <div class="switch-box">
-            <label>
-                <p>Switch 3</p>
+                <p class="status">State: <span id="state-display-2">Loading...</span></p>
+            </div>
+            <div class="switch-box">
+                <label for="switch-toggle-3">Switch 3</label>
                 <input type="checkbox" id="switch-toggle-3">
                 <span class="slider"></span>
-            </label>
-            <p class="status">State: <span id="state-display-3">Loading...</span></p>
+                <p class="status">State: <span id="state-display-3">Loading...</span></p>
+            </div>
         </div>
     </div>
 
