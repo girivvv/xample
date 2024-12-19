@@ -5,7 +5,7 @@ from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 
 # Server Configuration
-SERVER_IP = "http://10.0.0.0"
+SERVER_IP = "http://127.0.0.1"
 SERVER_PORT = "5000"
 POST_URL = f"{SERVER_IP}:{SERVER_PORT}/api/receive"
 
