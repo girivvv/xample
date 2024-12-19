@@ -17,7 +17,7 @@ switch_state = {
 }
 
 # Specify the path to the HTML file in the same directory as this script
-HTML_FILE_PATH = "/girivvv/xample/main/index.html"
+HTML_FILE_PATH = "C:\Users\girid\OneDrive\Documents\Desktop\index.html"
 
 class GetStateHandler(RequestHandler):
     """Handler for returning the current state of switches."""
