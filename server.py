@@ -17,7 +17,7 @@ switch_state = {
 }
 
 # Specify the path to the HTML file in the same directory as this script
-HTML_FILE_PATH = "C:\Users\girid\OneDrive\Documents\Desktop\index.html"
+HTML_FILE_PATH = "C:\Users\girid\xample\index.py"
 
 class GetStateHandler(RequestHandler):
     """Handler for returning the current state of switches."""
