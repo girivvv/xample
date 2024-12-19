@@ -44,7 +44,7 @@ class HTMLHandler(RequestHandler):
             self.write({"error": "HTML file not found"})
         except Exception as e:
             self.set_status(500)
-            self write({"error": str(e)})
+            self.write({"error": str(e)})
 
 class ToggleHandler(RequestHandler):
     """Handler for toggling the switch state."""
@@ -67,26 +67,26 @@ class ToggleHandler(RequestHandler):
                 try:
                     response = requests.post(POST_URL, json=payload)
                     server_response = response.text
-                    self set_header("Content-Type", "application/json")
-                    self write(json.dumps({
+                    self.set_header("Content-Type", "application/json")
+                    self.write(json.dumps({
                         "status": "success",
                         "response": server_response,
                         "switch_state": switch_state[switch_id]
                     }))
                 except requests.exceptions.RequestException as e:
                     self.set_status(500)
-                    self write({"status": "error", "message": str(e)})
+                    self.write({"status": "error", "message": str(e)})
             else:
                 raise ValueError("Invalid payload")
         except (json.JSONDecodeError, ValueError):
-            self set_status(400)
-            self write({"status": "error", "message": "Invalid payload"})
+            self.set_status(400)
+            self.write({"status": "error", "message": "Invalid payload"})
 
 class NotFoundHandler(RequestHandler):
     """Handler for undefined routes."""
     def prepare(self):
-        self set_status(404)
-        self write({"error": "Route not found"})
+        self.set_status(404)
+        self.write({"error": "Route not found"})
 
 def make_app():
     """Create the Tornado application."""
