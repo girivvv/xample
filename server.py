@@ -5,7 +5,7 @@ from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 
 # Server Configuration
-SERVER_IP = "http://127.0.0.1"
+SERVER_IP = "http://10.0.0.0"
 SERVER_PORT = "5000"
 POST_URL = f"{SERVER_IP}:{SERVER_PORT}/api/receive"
 
@@ -100,5 +100,5 @@ def make_app():
 if __name__ == "__main__":
     app = make_app()
     app.listen(5000)  # Run on port 9000
-    print("Tornado server running on port 9000...")
+    print("Tornado server running on port 5000...")
     IOLoop.current().start()
