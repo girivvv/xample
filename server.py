@@ -6,7 +6,7 @@ from tornado.web import Application, RequestHandler
 
 # Server Configuration
 SERVER_IP = "http://127.0.0.1"
-SERVER_PORT = "9000"
+SERVER_PORT = "5000"
 POST_URL = f"{SERVER_IP}:{SERVER_PORT}/api/receive"
 
 # Store switch state globally for simplicity
@@ -99,6 +99,6 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(9000)  # Run on port 9000
+    app.listen(5000)  # Run on port 9000
     print("Tornado server running on port 9000...")
     IOLoop.current().start()
