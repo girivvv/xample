@@ -1,6 +1,13 @@
 import json
-import tornado.ioloop
-import tornado.web
+import os
+import requests
+from tornado.ioloop import IOLoop
+from tornado.web import Application, RequestHandler
+
+# Server Configuration
+SERVER_IP = "http://127.0.0.1"
+SERVER_PORT = "9000"
+POST_URL = f"{SERVER_IP}:{SERVER_PORT}/api/receive"
 
 # Store switch state globally for simplicity
 switch_state = {
@@ -9,43 +16,89 @@ switch_state = {
     "switch_3": "off"
 }
 
-class GetStateHandler(tornado.web.RequestHandler):
+# Specify the path to the HTML file in the same directory as this script
+HTML_FILE_PATH = "/girivvv/xample/main/index.html"
+
+class GetStateHandler(RequestHandler):
+    """Handler for returning the current state of switches."""
     def get(self):
+        response = {
+            "switch_1": switch_state["switch_1"],
+            "switch_2": switch_state["switch_2"],
+            "switch_3": switch_state["switch_3"]
+        }
         self.set_header("Content-Type", "application/json")
-        self.write(json.dumps(switch_state))
+        self.write(json.dumps(response))
 
-class HTMLHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("index.html")
+class HTMLHandler(RequestHandler):
+    """Handler for serving the HTML file."""
+    async def get(self):
+        try:
+            print(f"Trying to serve HTML from: {HTML_FILE_PATH}")
+            with open(HTML_FILE_PATH, 'r', encoding='utf-8') as file:
+                html_content = file.read()
+                self.set_header("Content-Type", "text/html; charset=UTF-8")
+                self.write(html_content)
+        except FileNotFoundError:
+            self.set_status(404)
+            self.write({"error": "HTML file not found"})
+        except Exception as e:
+            self.set_status(500)
+            self write({"error": str(e)})
 
-class ToggleHandler(tornado.web.RequestHandler):
-    def post(self):
-        data = json.loads(self.request.body)
-        switch_id = data.get("switch_id")
-        new_state = data.get("state")
+class ToggleHandler(RequestHandler):
+    """Handler for toggling the switch state."""
+    async def post(self):
+        try:
+            # Parse the request body
+            data = json.loads(self.request.body)
+            switch_id = data.get("switch_id")
+            new_state = data.get("state")
 
-        if switch_id and new_state in ["on", "off"]:
-            switch_state[switch_id] = new_state
-            self.write({"status": "success", "switch_state": switch_state[switch_id]})
-        else:
-            self.set_status(400)
-            self.write({"status": "error", "message": "Invalid payload"})
+            if switch_id and new_state in ["on", "off"]:
+                # Update the state of the switch
+                switch_state[switch_id] = new_state
+                payload = {
+                    "switch_id": switch_id,
+                    "switch_state": new_state
+                }
 
-class NotFoundHandler(tornado.web.RequestHandler):
+                # Simulate sending data to an external server
+                try:
+                    response = requests.post(POST_URL, json=payload)
+                    server_response = response.text
+                    self set_header("Content-Type", "application/json")
+                    self write(json.dumps({
+                        "status": "success",
+                        "response": server_response,
+                        "switch_state": switch_state[switch_id]
+                    }))
+                except requests.exceptions.RequestException as e:
+                    self.set_status(500)
+                    self write({"status": "error", "message": str(e)})
+            else:
+                raise ValueError("Invalid payload")
+        except (json.JSONDecodeError, ValueError):
+            self set_status(400)
+            self write({"status": "error", "message": "Invalid payload"})
+
+class NotFoundHandler(RequestHandler):
+    """Handler for undefined routes."""
     def prepare(self):
-        self.set_status(404)
-        self.write({"error": "Route not found"})
+        self set_status(404)
+        self write({"error": "Route not found"})
 
 def make_app():
-    return tornado.web.Application([
+    """Create the Tornado application."""
+    return Application([
         (r"/get_state", GetStateHandler),
         (r"/", HTMLHandler),
         (r"/toggle", ToggleHandler),
-        (r".*", NotFoundHandler),
+        (r".*", NotFoundHandler)  # Catch-all for undefined routes
     ])
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(9000)
+    app.listen(9000)  # Run on port 9000
     print("Tornado server running on port 9000...")
-    tornado.ioloop.IOLoop.current().start()
+    IOLoop.current().start()
