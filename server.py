@@ -5,7 +5,7 @@ from tornado import escape
 import json
 
 # IP address of the ESP32 server
-SERVER_IP = "http://localhost:80"
+SERVER_IP = "http://localhost:8000"
 
 class StatusHandler(tornado.web.RequestHandler):
     async def get(self):
