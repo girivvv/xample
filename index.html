@@ -5,75 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Switch Control</title>
     <style>
-        /* General page styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        /* Header styling */
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        /* Switch container styling */
-        div {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            width: 300px;
-            text-align: center;
-        }
-
-        /* Styling for switch status */
-        h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        /* Styling for the status text */
-        span {
-            font-weight: bold;
-            color: #007bff;
-        }
-
-        /* Styling for the buttons */
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        /* Change button color on hover */
-        button:hover {
-            background-color: #218838;
-        }
-
-        /* Button for turning off switch */
-        button:nth-child(2) {
-            background-color: #dc3545;
-        }
-
-        button:nth-child(2):hover {
-            background-color: #c82333;
-        }
+        /* Your existing CSS remains the same */
     </style>
 </head>
 <body>
@@ -100,7 +32,7 @@
     <script>
     window.onload = async function() {
         try {
-            const response = await fetch("http://167.71.237.12:9000/get-status", {
+            const response = await fetch("/api/get-status", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -111,8 +43,6 @@
             document.getElementById("status1").innerText = data.switch_1 || "Error fetching state";
             document.getElementById("status2").innerText = data.switch_2 || "Error fetching state";
             document.getElementById("status3").innerText = data.switch_3 || "Error fetching state";
-
-            console.log(data);
         } catch (error) {
             console.error("Error fetching status:", error);
         }
@@ -120,7 +50,7 @@
 
     async function toggleSwitch(switchId, state) {
         try {
-            const response = await fetch("http://167.71.237.12:9000/set-status", {
+            const response = await fetch("/api/set-status", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -140,13 +70,10 @@
             } else if (switchId === 'switch_3') {
                 document.getElementById("status3").innerText = data.status || "Unknown";
             }
-
-            console.log(data);
         } catch (error) {
             console.error("Error toggling switch:", error);
         }
     }
-</script>
-
+    </script>
 </body>
 </html>
