@@ -108,9 +108,9 @@
             });
             const data = await response.json();
 
-            document.getElementById("status1").innerText = data.switch_1 || "Unknown";
-            document.getElementById("status2").innerText = data.switch_2 || "Unknown";
-            document.getElementById("status3").innerText = data.switch_3 || "Unknown";
+            document.getElementById("status1").innerText = data.switch_1 || "Error fetching state";
+            document.getElementById("status2").innerText = data.switch_2 || "Error fetching state";
+            document.getElementById("status3").innerText = data.switch_3 || "Error fetching state";
 
             console.log(data);
         } catch (error) {
