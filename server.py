@@ -5,7 +5,7 @@ from tornado import escape
 import json
 
 # IP address of the ESP32 server
-SERVER_IP = "http://127.0.0.1:9000"
+SERVER_IP = "http://localhost:80"
 
 class StatusHandler(tornado.web.RequestHandler):
     async def get(self):
@@ -50,6 +50,6 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(9000)  # Tornado backend listens on port 9000
-    print("Tornado server running on http://127.0.0.1:9000")
+    app.listen(80)  # Tornado backend listens on port 9000
+    print("Tornado server running on http://localhost:80")
     tornado.ioloop.IOLoop.current().start()
