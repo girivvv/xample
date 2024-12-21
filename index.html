@@ -5,170 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Switch Control</title>
     <style>
+        /* General page styling */
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #20232a;
-            color: #61dafb;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
-        .container {
-            text-align: center;
-        }
-
-        .title {
-            font-size: 2em;
+        /* Header styling */
+        h1 {
+            color: #333;
             margin-bottom: 20px;
         }
 
-        .switch-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .switch-box {
-            background-color: #282c34;
-            border: 2px solid #61dafb;
-            border-radius: 10px;
+        /* Switch container styling */
+        div {
+            background-color: #fff;
             padding: 20px;
-            width: 100px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: center;
         }
 
-        .switch-box label {
-            display: block;
+        /* Styling for switch status */
+        h3 {
+            font-size: 1.2em;
             margin-bottom: 10px;
-            color: #61dafb;
+            color: #555;
         }
 
-        .slider {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            background-color: #ccc;
-            border-radius: 30px;
+        /* Styling for the status text */
+        span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Styling for the buttons */
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+            border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .slider::after {
-            content: "";
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background-color: #61dafb;
-            border-radius: 50%;
-            top: 50%;
-            left: 5px;
-            transform: translateY(-50%);
-            transition: transform 0.3s;
+        /* Change button color on hover */
+        button:hover {
+            background-color: #218838;
         }
 
-        input[type="checkbox"]:checked + .slider {
-            background-color: #4caf50;
+        /* Button for turning off switch */
+        button:nth-child(2) {
+            background-color: #dc3545;
         }
 
-        input[type="checkbox"]:checked + .slider::after {
-            transform: translate(30px, -50%);
-        }
-
-        input[type="checkbox"] {
-            display: none;
-        }
-
-        .status {
-            margin-top: 10px;
-            color: #61dafb;
-        }
-
-        .error {
-            color: red;
-            font-size: 14px;
+        button:nth-child(2):hover {
+            background-color: #c82333;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">IoT Switch Control</h1>
-        <div id="error-message" class="error"></div>
-        <div class="switch-container">
-            <div class="switch-box">
-                <label for="switch-toggle-1">Switch 1</label>
-                <input type="checkbox" id="switch-toggle-1">
-                <span class="slider"></span>
-                <p class="status">State: <span id="state-display-1">Loading...</span></p>
-            </div>
-            <div class="switch-box">
-                <label for="switch-toggle-2">Switch 2</label>
-                <input type="checkbox" id="switch-toggle-2">
-                <span class="slider"></span>
-                <p class="status">State: <span id="state-display-2">Loading...</span></p>
-            </div>
-            <div class="switch-box">
-                <label for="switch-toggle-3">Switch 3</label>
-                <input type="checkbox" id="switch-toggle-3">
-                <span class="slider"></span>
-                <p class="status">State: <span id="state-display-3">Loading...</span></p>
-            </div>
-        </div>
+    <h1>IoT Switch Control</h1>
+    
+    <div>
+        <h3>Switch 1: <span id="status1">Unknown</span></h3>
+        <button onclick="toggleSwitch('switch_1', 'on')">Turn ON</button>
+        <button onclick="toggleSwitch('switch_1', 'off')">Turn OFF</button>
     </div>
-
+    
+    <div>
+        <h3>Switch 2: <span id="status2">Unknown</span></h3>
+        <button onclick="toggleSwitch('switch_2', 'on')">Turn ON</button>
+        <button onclick="toggleSwitch('switch_2', 'off')">Turn OFF</button>
+    </div>
+    
+    <div>
+        <h3>Switch 3: <span id="status3">Unknown</span></h3>
+        <button onclick="toggleSwitch('switch_3', 'on')">Turn ON</button>
+        <button onclick="toggleSwitch('switch_3', 'off')">Turn OFF</button>
+    </div>
+    
     <script>
-        const serverUrl = "http://127.0.0.1:5000";
-
-        async function fetchState() {
-            try {
-                const response = await fetch(`${serverUrl}/get_state`);
-                if (!response.ok) throw new Error("Failed to fetch states.");
-                const data = await response.json();
-
-                for (let i = 1; i <= 3; i++) {
-                    const switchState = data[`switch_${i}`];
-                    const stateDisplay = document.getElementById(`state-display-${i}`);
-                    const switchToggle = document.getElementById(`switch-toggle-${i}`);
-
-                    stateDisplay.textContent = switchState;
-                    switchToggle.checked = switchState === "on";
+    window.onload = async function() {
+        try {
+            const response = await fetch("http://167.71.237.12:9000/get-status", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
                 }
-            } catch (error) {
-                document.getElementById("error-message").textContent = "Error fetching switch states.";
-            }
+            });
+            const data = await response.json();
+
+            document.getElementById("status1").innerText = data.switch_1 || "Unknown";
+            document.getElementById("status2").innerText = data.switch_2 || "Unknown";
+            document.getElementById("status3").innerText = data.switch_3 || "Unknown";
+
+            console.log(data);
+        } catch (error) {
+            console.error("Error fetching status:", error);
         }
+    };
 
-        async function updateState(switchId, newState) {
-            try {
-                const response = await fetch(`${serverUrl}/toggle`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ switch_id: `switch_${switchId}`, state: newState }),
-                });
-                const data = await response.json();
-                if (data.status !== "success") throw new Error(data.message);
+    async function toggleSwitch(switchId, state) {
+        try {
+            const response = await fetch("http://167.71.237.12:9000/set-status", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    switch_id: switchId,
+                    state: state
+                })
+            });
 
-                const stateDisplay = document.getElementById(`state-display-${switchId}`);
-                stateDisplay.textContent = data.switch_state;
-            } catch (error) {
-                alert(`Error updating switch ${switchId}: ${error.message}`);
+            const data = await response.json();
+
+            if (switchId === 'switch_1') {
+                document.getElementById("status1").innerText = data.status || "Unknown";
+            } else if (switchId === 'switch_2') {
+                document.getElementById("status2").innerText = data.status || "Unknown";
+            } else if (switchId === 'switch_3') {
+                document.getElementById("status3").innerText = data.status || "Unknown";
             }
+
+            console.log(data);
+        } catch (error) {
+            console.error("Error toggling switch:", error);
         }
+    }
+</script>
 
-        window.onload = () => {
-            fetchState();
-
-            for (let i = 1; i <= 3; i++) {
-                const switchToggle = document.getElementById(`switch-toggle-${i}`);
-                switchToggle.addEventListener("change", function () {
-                    const newState = switchToggle.checked ? "on" : "off";
-                    updateState(i, newState);
-                });
-            }
-        };
-    </script>
 </body>
 </html>
